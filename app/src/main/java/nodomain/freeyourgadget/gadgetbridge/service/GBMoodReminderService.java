@@ -10,7 +10,12 @@ import android.util.Log;
 import nodomain.freeyourgadget.gadgetbridge.activities.MoodReminderActivity;
 
 public class GBMoodReminderService extends Service {
-    Context context = this;
+
+    private Context context = this;
+
+    private static int HOUR = 10000;
+    private static int START_REMINDER = 0;
+    private static int END_REMINDER = 23;
 
     public GBMoodReminderService() {
     }
@@ -49,14 +54,16 @@ public class GBMoodReminderService extends Service {
                 Vibrator vibrator;
                 while (true) {
                     nowTimeMillis = System.currentTimeMillis();
-                    if (nowTimeMillis/7200000 - lastTimeMillis/7200000 >= 1 &&
-                            (nowTimeMillis/3600000)%24 >= 1 &&  (nowTimeMillis/3600000)%24 <= 14) {
+                    if (nowTimeMillis/HOUR - lastTimeMillis/HOUR >= 2 &&
+                            (nowTimeMillis/HOUR)%24 >= START_REMINDER &&
+                            (nowTimeMillis/HOUR)%24 <= END_REMINDER) {
                         vibrator=(Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                         vibrator.vibrate(400);//400ms
 
                         Intent showMoodReminder = new Intent(context, MoodReminderActivity.class);
                         showMoodReminder.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         getApplication().startActivity(showMoodReminder);
+
 
                         lastTimeMillis = nowTimeMillis;
                     }

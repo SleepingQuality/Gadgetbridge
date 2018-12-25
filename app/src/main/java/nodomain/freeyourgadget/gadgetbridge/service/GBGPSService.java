@@ -20,7 +20,7 @@ public class GBGPSService extends Service {
     private Sensor sensor;
     private SensorManager sm;
     private SensorEventListener listener;
-    private float mx,my,mz;
+    private double accele_x, accele_y, accele_z;
 
     public GBGPSService() {
     }
@@ -76,6 +76,7 @@ public class GBGPSService extends Service {
 
             long lastTimeMillis = System.currentTimeMillis();
             long nowTimeMillis = System.currentTimeMillis();
+            float xsum = 0, ysum = 0, zsum = 0;
 
             @Override
             public void onSensorChanged(SensorEvent event) {
@@ -86,18 +87,25 @@ public class GBGPSService extends Service {
                 float x=xyz[0];
                 float y=xyz[1];
                 float z=xyz[2];
-                if(nowTimeMillis/60000 - lastTimeMillis/60000 >= 1)
-                {
+
+                if (nowTimeMillis/5000 - lastTimeMillis/5000 >= 1) {
+                    xsum += x*x;
+                    ysum += y*y;
+                    zsum += z*z;
+                }
+                if (nowTimeMillis/60000 - lastTimeMillis/60000 >= 1) {
+                    accele_x = (sqrt(xsum/12));
+                    accele_y = (sqrt(ysum/12));
+                    accele_z = (sqrt(zsum/12));
                     String s = new String(x+" "+y+" "+z+"--"+nowTimeMillis);
                     Log.i("showAccelerometer", s);
                     lastTimeMillis = nowTimeMillis;
+                    xsum = 0;
+                    ysum = 0;
+                    zsum = 0;
+
+                    //TODO: PASS THE DATA
                 }
-                mx=x;
-                my=y;
-                mz=z;
-                float m = mx*mx + my*my + mz*mz;
-
-
             }
 
             @Override
