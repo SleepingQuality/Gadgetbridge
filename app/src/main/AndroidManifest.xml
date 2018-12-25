@@ -24,6 +24,7 @@
     <uses-permission android:name="cyanogenmod.permission.READ_WEATHER" />
     <uses-permission android:name="org.omnirom.omnijaws.READ_WEATHER" />
     <uses-permission android:name="android.permisson.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-feature
         android:name="android.hardware.bluetooth"
@@ -357,11 +358,11 @@
         <receiver
             android:name=".database.PeriodicExporter"
             android:enabled="true"
-            android:exported="false">
-        </receiver>
+            android:exported="false" />
         <receiver android:name=".service.receivers.GBBootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </receiver>
@@ -471,8 +472,18 @@
         <service
             android:name=".service.GBGPSService"
             android:enabled="true"
-            android:exported="true">
-        </service>
+            android:exported="true" />
+        <service
+            android:name=".service.GBMoodReminderService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".activities.MoodReminderActivity"
+            android:label="@string/title_activity_mood_reminder"
+            android:theme="@style/GadgetbridgeTheme.NoActionBar"
+            android:launchMode="singleInstance">
+        </activity>
     </application>
 
 </manifest>

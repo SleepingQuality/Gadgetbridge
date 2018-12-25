@@ -6,13 +6,16 @@ import android.content.Intent;
 import android.util.Log;
 
 import nodomain.freeyourgadget.gadgetbridge.service.GBGPSService;
+import nodomain.freeyourgadget.gadgetbridge.service.GBMoodReminderService;
 
 public class GBBootReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("GBBootReceiver", "onReceive");
-        Intent service = new Intent(context, GBGPSService.class);
-        context.startService(service);
+        Intent gbGPSService = new Intent(context, GBGPSService.class);
+        context.startService(gbGPSService);
+        Intent gbMoodReminderService = new Intent(context, GBMoodReminderService.class);
+        context.startService(gbMoodReminderService);
     }
 }

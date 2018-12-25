@@ -63,6 +63,8 @@ import nodomain.freeyourgadget.gadgetbridge.impl.GBDevice;
 import nodomain.freeyourgadget.gadgetbridge.impl.GBDeviceService;
 import nodomain.freeyourgadget.gadgetbridge.model.ActivityUser;
 import nodomain.freeyourgadget.gadgetbridge.model.DeviceService;
+import nodomain.freeyourgadget.gadgetbridge.service.GBGPSService;
+import nodomain.freeyourgadget.gadgetbridge.service.GBMoodReminderService;
 import nodomain.freeyourgadget.gadgetbridge.service.NotificationCollectorMonitorService;
 import nodomain.freeyourgadget.gadgetbridge.util.AndroidUtils;
 import nodomain.freeyourgadget.gadgetbridge.util.FileUtils;
@@ -197,6 +199,11 @@ public class GBApplication extends Application {
             }
             startService(new Intent(this, NotificationCollectorMonitorService.class));
         }
+
+        Intent gbGPSService = new Intent(context, GBGPSService.class);
+        context.startService(gbGPSService);
+        Intent gbMoodReminderService = new Intent(context, GBMoodReminderService.class);
+        context.startService(gbMoodReminderService);
     }
 
     @Override
