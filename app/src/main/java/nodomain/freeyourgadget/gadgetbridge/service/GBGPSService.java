@@ -11,12 +11,16 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import nodomain.freeyourgadget.gadgetbridge.R;
 
 import static java.lang.Math.sqrt;
 
 public class GBGPSService extends Service {
+
+    private Context context = this;
+
     private Sensor sensor;
     private SensorManager sm;
     private SensorEventListener listener;
@@ -75,8 +79,10 @@ public class GBGPSService extends Service {
         listener=new SensorEventListener() {
 
             long lastTimeMillis = System.currentTimeMillis();
+            long tempTimeMillis = System.currentTimeMillis();
             long nowTimeMillis = System.currentTimeMillis();
             float xsum = 0, ysum = 0, zsum = 0;
+            int times = 0;
 
             @Override
             public void onSensorChanged(SensorEvent event) {
@@ -88,22 +94,28 @@ public class GBGPSService extends Service {
                 float y=xyz[1];
                 float z=xyz[2];
 
-                if (nowTimeMillis/5000 - lastTimeMillis/5000 >= 1) {
+                if (nowTimeMillis/5000 - tempTimeMillis/5000 >= 1) {
                     xsum += x*x;
                     ysum += y*y;
                     zsum += z*z;
+                    String s = new String(x+" "+y+" "+z+"--"+nowTimeMillis);
+                    Log.i("showAccelerometer", s);
+                    tempTimeMillis = nowTimeMillis;
+                    times ++;
                 }
                 if (nowTimeMillis/60000 - lastTimeMillis/60000 >= 1) {
-                    accele_x = (sqrt(xsum/12));
-                    accele_y = (sqrt(ysum/12));
-                    accele_z = (sqrt(zsum/12));
-                    String s = new String(x+" "+y+" "+z+"--"+nowTimeMillis);
+                    accele_x = (sqrt(xsum/times));
+                    accele_y = (sqrt(ysum/times));
+                    accele_z = (sqrt(zsum/times));
+                    String s = new String(accele_x+" "+accele_y+" "+accele_z+"--"+nowTimeMillis);
                     Log.i("showAccelerometer", s);
                     lastTimeMillis = nowTimeMillis;
                     xsum = 0;
                     ysum = 0;
                     zsum = 0;
+                    times = 0;
 
+                    Toast.makeText(context, s, Toast.LENGTH_LONG).show();
                     //TODO: PASS THE DATA
                 }
             }
