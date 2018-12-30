@@ -13,9 +13,9 @@ public class GBMoodReminderService extends Service {
 
     private Context context = this;
 
-    private static int HOUR = 10000;
-    private static int START_REMINDER = 0;
-    private static int END_REMINDER = 23;
+    private static int HOUR = 3600000;
+    private static int START_REMINDER = 1;
+    private static int END_REMINDER = 14;
 
     public GBMoodReminderService() {
     }
