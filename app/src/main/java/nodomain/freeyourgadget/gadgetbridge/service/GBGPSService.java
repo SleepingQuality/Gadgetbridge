@@ -13,6 +13,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ServiceCompat;
 import android.support.v4.content.ContextCompat;
@@ -130,7 +131,7 @@ public class GBGPSService extends Service {
                     xsum += x*x;
                     ysum += y*y;
                     zsum += z*z;
-                    String s = new String(x+" "+y+" "+z+"--"+nowTimeMillis);
+                    String s = new String(x+" "+y+" "+z+" --"+nowTimeMillis);
                     Log.i("showAccelerometer", s);
                     tempTimeMillis = nowTimeMillis;
                     times ++;
@@ -197,7 +198,6 @@ public class GBGPSService extends Service {
                             String locStr = new String(longitude+" "+latitude+" "+altitude+" "+radius+" "
                                     +" --"+System.currentTimeMillis());
                             Log.i("showGPS", locStr);
-                            Toast.makeText(context, locStr, Toast.LENGTH_LONG).show();
 
                             //TODO: PASS THE DATA
                         }
@@ -246,6 +246,9 @@ public class GBGPSService extends Service {
 
             int errorCode = location.getLocType();
             //获取定位类型、定位错误返回码，具体信息可参照类参考中BDLocation类中的说明
+
+            Toast.makeText(context, new String(longitude+" "+latitude+" "+altitude+" "+radius+" "
+                    +" --"+System.currentTimeMillis()), Toast.LENGTH_LONG).show();
 
         }
     }
