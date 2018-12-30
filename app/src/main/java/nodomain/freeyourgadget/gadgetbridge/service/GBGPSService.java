@@ -194,6 +194,12 @@ public class GBGPSService extends Service {
                             } catch (Exception e) {
 
                             }
+                            String locStr = new String(longitude+" "+latitude+" "+altitude+" "+radius+" "
+                                    +" --"+System.currentTimeMillis());
+                            Log.i("showGPS", locStr);
+                            Toast.makeText(context, locStr, Toast.LENGTH_LONG).show();
+
+                            //TODO: PASS THE DATA
                         }
                     }
                 }
@@ -241,12 +247,6 @@ public class GBGPSService extends Service {
             int errorCode = location.getLocType();
             //获取定位类型、定位错误返回码，具体信息可参照类参考中BDLocation类中的说明
 
-            String locStr = new String(longitude+" "+latitude+" "+altitude+" "+radius+" "
-                +" --"+System.currentTimeMillis());
-            Log.i("showGPS", locStr);
-            Toast.makeText(context, locStr, Toast.LENGTH_LONG).show();
-
-            //TODO: PASS THE DATA
         }
     }
 
