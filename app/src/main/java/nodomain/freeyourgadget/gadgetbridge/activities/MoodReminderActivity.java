@@ -2,6 +2,7 @@ package nodomain.freeyourgadget.gadgetbridge.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -144,12 +145,19 @@ public class MoodReminderActivity extends AppCompatActivity {
                             mood_y += moodSeekBar[i].getProgress() * UNIT_Y[i];
                             weightSum += moodSeekBar[i].getProgress();
                         }
-                        mood_x = mood_x / weightSum;
-                        mood_y = mood_y / weightSum;
+                        if (weightSum != 0) {
+                            mood_x = mood_x / weightSum;
+                            mood_y = mood_y / weightSum;
+                        } else {
+                            mood_x = 0;
+                            mood_y = 0;
+                        }
                         Log.i("MoodReminderActivity", mood_x+" "+mood_y+" ");
 
                         Toast.makeText(context, mood_x+" "+mood_y+" ", Toast.LENGTH_LONG).show();
                         //TODO: PASS THE DATA
+
+                        finish();
                     }
                 }
         );

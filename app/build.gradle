@@ -51,6 +51,13 @@ android {
             includeAndroidResources = true
         }
     }
+
+    sourceSets{
+        main{
+            jniLibs.srcDir 'libs'
+            jni.srcDirs = []    //disable automatic ndk-build
+        }
+    }
 }
 
 pmd {
