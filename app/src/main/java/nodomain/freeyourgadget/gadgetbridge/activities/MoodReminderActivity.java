@@ -64,18 +64,18 @@ public class MoodReminderActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //X FOR POSITIVE; Y FOR ENERGETIC
-        UNIT_X[EXCITED] = 1; UNIT_Y[EXCITED] = 1;
-        UNIT_X[HAPPY] = 1; UNIT_Y[HAPPY] = 0.5f;
-        UNIT_X[PLEASED] = 1; UNIT_Y[PLEASED] = 0;
-        UNIT_X[RELAXED] = 1; UNIT_Y[RELAXED] = -0.5f;
-        UNIT_X[PEACEFUL] = 0.5f; UNIT_Y[PEACEFUL] = -1;
-        UNIT_X[CALM] = 0; UNIT_Y[CALM] = -1;
-        UNIT_X[BORED] = -0.5f; UNIT_Y[BORED] = -1;
-        UNIT_X[DEPRESSED] = -1; UNIT_Y[DEPRESSED] = -0.5f;
-        UNIT_X[SAD] = -1; UNIT_Y[SAD] = 0;
-        UNIT_X[NERVOUS] = -1; UNIT_Y[NERVOUS] = 0.5f;
-        UNIT_X[ANXIOUS] = -1; UNIT_Y[ANXIOUS] = 0.5f;
-        UNIT_X[ANGRY] = -1; UNIT_Y[ANGRY] = 1;
+        UNIT_X[EXCITED] = 0.1f; UNIT_Y[EXCITED] = 0.9f;
+        UNIT_X[HAPPY] = 0.5f; UNIT_Y[HAPPY] = 0.5f;
+        UNIT_X[PLEASED] = 0.9f; UNIT_Y[PLEASED] = 0.1f;
+        UNIT_X[RELAXED] = 0.9f; UNIT_Y[RELAXED] = -0.1f;
+        UNIT_X[PEACEFUL] = 0.5f; UNIT_Y[PEACEFUL] = -0.5f;
+        UNIT_X[CALM] = 0.1f; UNIT_Y[CALM] = -0.9f;
+        UNIT_X[BORED] = -0.1f; UNIT_Y[BORED] = -0.9f;
+        UNIT_X[DEPRESSED] = -0.5f; UNIT_Y[DEPRESSED] = -0.5f;
+        UNIT_X[SAD] = -0.9f; UNIT_Y[SAD] = -0.1f;
+        UNIT_X[NERVOUS] = -0.9f; UNIT_Y[NERVOUS] = 0.1f;
+        UNIT_X[ANXIOUS] = -0.5f; UNIT_Y[ANXIOUS] = 0.5f;
+        UNIT_X[ANGRY] = -0.1f; UNIT_Y[ANGRY] = 0.9f;
 
         submitButton = (Button)findViewById(R.id.submitButton);
         moodCheckBox = new CheckBox[MOOD_NUM];
@@ -125,6 +125,11 @@ public class MoodReminderActivity extends AppCompatActivity {
                             if (compoundButton.isChecked()) {
                                 moodSeekBar[j].setEnabled(true);
                                 moodSeekBar[j].setProgress(80);
+                                for (int k = 0; k < MOOD_NUM; k ++) {
+                                    if (k != j) {
+                                        moodCheckBox[k].setChecked(false);
+                                    }
+                                }
                             } else {
                                 moodSeekBar[j].setEnabled(false);
                                 moodSeekBar[j].setProgress(0);
@@ -146,8 +151,8 @@ public class MoodReminderActivity extends AppCompatActivity {
                             weightSum += moodSeekBar[i].getProgress();
                         }
                         if (weightSum != 0) {
-                            mood_x = mood_x / weightSum;
-                            mood_y = mood_y / weightSum;
+                            mood_x = mood_x / 100;
+                            mood_y = mood_y / 100;
                         } else {
                             mood_x = 0;
                             mood_y = 0;
