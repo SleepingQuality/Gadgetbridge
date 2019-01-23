@@ -3,21 +3,32 @@ package nodomain.freeyourgadget.gadgetbridge.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import nodomain.freeyourgadget.gadgetbridge.activities.MoodReminderActivity;
+import nodomain.freeyourgadget.gadgetbridge.service.receivers.GBMoodResultReceiver;
 
 public class GBMoodReminderService extends Service {
 
     private Context context = this;
 
+    private GBMoodResultReceiver gbMoodResultReceiver;
+    private LocalBroadcastManager localBroadcastManager;
+    private IntentFilter intentFilter;
+
     private static int HOUR = 3600000;
     private static int START_REMINDER = 1;
     private static int END_REMINDER = 14;
 
+    private float mood_x = 0;
+    private float mood_y = 0;
+
     public GBMoodReminderService() {
+
     }
 
     @Override
@@ -30,6 +41,14 @@ public class GBMoodReminderService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d("GBMoodReminderService", "onCreate executed");
+        mood_x = 0; mood_y = 0;
+
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        intentFilter = new IntentFilter();
+        intentFilter.addAction("nodomain.freeyourgadget.gadgetbridge.GBMoodResult");
+        gbMoodResultReceiver = new GBMoodResultReceiver();
+        localBroadcastManager.registerReceiver(gbMoodResultReceiver, intentFilter);
+        //registerReceiver(gbMoodResultReceiver, intentFilter);
     }
 
     @Override
@@ -43,7 +62,17 @@ public class GBMoodReminderService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.d("GBMoodReminderService", "onDestroy executed");
+        localBroadcastManager.unregisterReceiver(gbMoodResultReceiver);
+        //unregisterReceiver(gbMoodResultReceiver);
     }
+
+    public void setMood(int x, int y) {
+        mood_x = x;
+        mood_y = y;
+    }
+
+    public float getMood_x() {return mood_x;}
+    public float getMood_y() {return mood_y;}
 
     public void startMoodReminder() {
         new Thread(new Runnable() {

@@ -372,6 +372,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".service.receivers.GBMoodResultReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="nodomain.freeyourgadget.gadgetbridge.GBMoodResult" />
+            </intent-filter>
+        </receiver>
 
         <!--
             forcing the DebugActivity to portrait mode avoids crashes with the progress
@@ -487,19 +495,17 @@
         <activity
             android:name=".activities.MoodReminderActivity"
             android:label="@string/title_activity_mood_reminder"
-            android:theme="@style/GadgetbridgeTheme.NoActionBar"
-            android:launchMode="singleInstance">
-        </activity>
+            android:launchMode="singleInstance"
+            android:theme="@style/GadgetbridgeTheme.NoActionBar"></activity>
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="hwWPvo8XOGPsT02S7BIerEhAIPnbnSGL" >
-        </meta-data>
+            android:value="hwWPvo8XOGPsT02S7BIerEhAIPnbnSGL"></meta-data>
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote">
-        </service>
+            android:process=":remote"></service>
     </application>
 
 </manifest>

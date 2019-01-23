@@ -1,6 +1,8 @@
 package nodomain.freeyourgadget.gadgetbridge.activities;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
@@ -159,10 +161,14 @@ public class MoodReminderActivity extends AppCompatActivity {
                         }
                         Log.i("MoodReminderActivity", mood_x+" "+mood_y+" ");
 
-                        Toast.makeText(context, mood_x+" "+mood_y+" ", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(context, mood_x+" "+mood_y+" ", Toast.LENGTH_LONG).show();
                         //TODO: PASS THE DATA
 
-                        finish();
+                        Intent intent = new Intent("nodomain.freeyourgadget.gadgetbridge.GBMoodResult");
+                        intent.setComponent(new ComponentName("nodomain.freeyourgadget.gadgetbridge",
+                                "nodomain.freeyourgadget.gadgetbridge.service.receivers.GBMoodResultReceiver"));
+                        sendBroadcast(intent);
+                        //finish();
                     }
                 }
         );

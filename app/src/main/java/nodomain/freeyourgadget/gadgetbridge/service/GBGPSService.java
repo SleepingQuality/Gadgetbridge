@@ -56,6 +56,7 @@ public class GBGPSService extends Service {
     private double latitude, longitude, altitude, radius;
 
     public GBGPSService() {
+
     }
 
     @Override
