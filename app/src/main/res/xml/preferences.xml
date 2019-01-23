@@ -135,6 +135,44 @@
                 android:key="activity_user_sleep_duration"
                 android:maxLength="2"
                 android:title="@string/activity_prefs_sleep_duration" />
+
+            <PreferenceCategory
+                android:title="@string/pref_title_home_location_acquire">
+            <Preference
+                android:key="home_location"
+                android:title="@string/pref_title_home_location_acquire"/>
+            <EditTextPreference
+                android:maxLength="12"
+                android:inputType="numberDecimal|numberSigned"
+                android:defaultValue="0"
+                android:key="home_location_latitude"
+                android:title="@string/pref_title_location_latitude" />
+            <EditTextPreference
+                android:maxLength="12"
+                android:inputType="numberDecimal|numberSigned"
+                android:defaultValue="0"
+                android:key="home_location_longitude"
+                android:title="@string/pref_title_location_longitude" />
+            </PreferenceCategory>
+
+            <PreferenceCategory
+                android:title="@string/pref_title_workplace_location_acquire">
+            <Preference
+                android:key="workplace_location"
+                android:title="@string/pref_title_workplace_location_acquire"/>
+            <EditTextPreference
+                android:maxLength="12"
+                android:inputType="numberDecimal|numberSigned"
+                android:defaultValue="0"
+                android:key="workplace_location_latitude"
+                android:title="@string/pref_title_location_latitude" />
+            <EditTextPreference
+                android:maxLength="12"
+                android:inputType="numberDecimal|numberSigned"
+                android:defaultValue="0"
+                android:key="workplace_location_longitude"
+                android:title="@string/pref_title_location_longitude" />
+            </PreferenceCategory>
         </PreferenceScreen>
         <PreferenceScreen
             android:key="pref_charts"
@@ -340,18 +378,6 @@
                 android:entries="@array/pref_bip_display_items"
                 android:entryValues="@array/pref_bip_display_items_values"
                 android:key="bip_display_items"
-                android:summary="@string/mi2_prefs_display_items_summary"
-                android:title="@string/mi2_prefs_display_items"/>
-        </PreferenceScreen>
-        <PreferenceScreen
-            android:icon="@drawable/ic_device_miband"
-            android:title="@string/preferences_amazfitcor_settings">
-            <MultiSelectListPreference
-                android:dialogTitle="@string/mi2_prefs_display_items"
-                android:defaultValue="@array/pref_cor_display_items_default"
-                android:entries="@array/pref_cor_display_items"
-                android:entryValues="@array/pref_cor_display_items_values"
-                android:key="cor_display_items"
                 android:summary="@string/mi2_prefs_display_items_summary"
                 android:title="@string/mi2_prefs_display_items"/>
         </PreferenceScreen>
@@ -639,6 +665,18 @@
                     android:maxLength="5"
                     android:title="Emulator Port" />
             </PreferenceCategory>
+            <PreferenceScreen
+                android:icon="@drawable/ic_device_miband"
+                android:title="@string/preferences_amazfitcor_settings">
+                <MultiSelectListPreference
+                    android:defaultValue="@array/pref_cor_display_items_default"
+                    android:dialogTitle="@string/mi2_prefs_display_items"
+                    android:entries="@array/pref_cor_display_items"
+                    android:entryValues="@array/pref_cor_display_items_values"
+                    android:key="cor_display_items"
+                    android:summary="@string/mi2_prefs_display_items_summary"
+                    android:title="@string/mi2_prefs_display_items" />
+            </PreferenceScreen>
         </PreferenceScreen>
         <PreferenceScreen
             android:icon="@drawable/ic_device_hplus"
