@@ -55,6 +55,9 @@ public class GBGPSService extends Service {
     private LocationClientOption option;
     private double latitude, longitude, altitude, radius;
 
+    private Thread initialThread;
+    private Thread gpsThread;
+
     public GBGPSService() {
 
     }
@@ -86,14 +89,34 @@ public class GBGPSService extends Service {
                 .build();
         startForeground(0001,notification);
         */
+        if (gpsThread != null) {
+            try {
+                if (mLocationClient != null)
+                    mLocationClient.stop();
+                gpsThread.stop();
+                Log.i("GBGPSService", "kill old gpsThread.");
+                gpsThread = null;
+            } catch (Exception e) {
 
-        new Thread(new Runnable() {
+            }
+        }
+        if (initialThread != null) {
+            try {
+                initialThread.stop();
+                Log.i("GBGPSService", "kill old initialThread.");
+                initialThread = null;
+            } catch (Exception e) {
+
+            }
+        }
+        initialThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 startAccelerometer();
                 startGPS();
             }
-        }).start();
+        });
+        initialThread.start();
 
         return Service.START_STICKY;
     }
@@ -156,7 +179,6 @@ public class GBGPSService extends Service {
                     times = 0;
 
                     //Toast.makeText(context, s, Toast.LENGTH_LONG).show();
-                    //TODO: PASS THE DATA
                 }
             }
 
@@ -182,7 +204,7 @@ public class GBGPSService extends Service {
         if (Build.VERSION.SDK_INT >= 23)
             getPermissions();
 
-        new Thread(
+        gpsThread = new Thread(
                 new Runnable() {
                     @Override
                     public void run() {
@@ -206,11 +228,11 @@ public class GBGPSService extends Service {
                                     +" --"+System.currentTimeMillis());
                             Log.i("showGPS", locStr);
 
-                            //TODO: PASS THE DATA
                         }
                     }
                 }
-        ).start();
+        );
+        gpsThread.start();
     }
 
     public void getPermissions() {

@@ -21,12 +21,19 @@ public class GBMoodReminderService extends Service {
     private LocalBroadcastManager localBroadcastManager;
     private IntentFilter intentFilter;
 
-    private static int HOUR = 3600000;
+    private static int HOUR = 3600000;//10000 for debug, 3600000 for release
     private static int START_REMINDER = 1;
-    private static int END_REMINDER = 14;
+    private static int END_REMINDER = 15;//24 for debug, 15 for release
 
     private static float mood_x = 0;
     private static float mood_y = 0;
+
+    private long lastTimeMillis;
+    private long nowTimeMillis;
+
+    private Vibrator vibrator;
+
+    private Thread thread;
 
     public GBMoodReminderService() {
 
@@ -43,6 +50,8 @@ public class GBMoodReminderService extends Service {
         super.onCreate();
         Log.d("GBMoodReminderService", "onCreate executed");
         mood_x = 0; mood_y = 0;
+        lastTimeMillis = 0;
+        nowTimeMillis = 0;
 
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         intentFilter = new IntentFilter();
@@ -76,19 +85,28 @@ public class GBMoodReminderService extends Service {
     public static float getMood_y() {return mood_y;}
 
     public void startMoodReminder() {
-        new Thread(new Runnable() {
+        if (thread != null) {
+            try {
+                thread.stop();
+                Log.i("startMoodReminder", "kill old thread.");
+                thread = null;
+            } catch (Exception e) {
+
+            }
+        }
+        if (lastTimeMillis == 0) {
+            lastTimeMillis = System.currentTimeMillis();
+        }
+        thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                long lastTimeMillis = System.currentTimeMillis();
-                long nowTimeMillis;
-                Vibrator vibrator;
                 while (true) {
                     nowTimeMillis = System.currentTimeMillis();
-                    if (nowTimeMillis/HOUR - lastTimeMillis/HOUR >= 2 &&
+                    if (nowTimeMillis/(2*HOUR) - lastTimeMillis/(2*HOUR) >= 1 &&
                             (nowTimeMillis/HOUR)%24 >= START_REMINDER &&
                             (nowTimeMillis/HOUR)%24 <= END_REMINDER) {
                         vibrator=(Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                        vibrator.vibrate(400);//400ms
+                        //vibrator.vibrate(400);//400ms
 
                         Intent showMoodReminder = new Intent(context, MoodReminderActivity.class);
                         showMoodReminder.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -99,7 +117,7 @@ public class GBMoodReminderService extends Service {
                     //mood_x = gbMoodResultReceiver.mood_x;
                     //mood_y = gbMoodResultReceiver.mood_y;
                     //String str = new String("mood_x: " + mood_x + ", mood_y: " + mood_y);
-                    //Log.i("MoodReminderService", str);
+                    //Log.d("MoodReminderService", str);
                     try {
                         Thread.sleep(2000);
                     } catch (Exception e) {
@@ -107,6 +125,7 @@ public class GBMoodReminderService extends Service {
                     }
                 }
             }
-        }).start();
+        });
+        thread.start();
     }
 }
