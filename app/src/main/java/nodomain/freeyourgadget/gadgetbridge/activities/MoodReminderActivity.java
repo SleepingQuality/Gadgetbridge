@@ -167,8 +167,10 @@ public class MoodReminderActivity extends AppCompatActivity {
                         Intent intent = new Intent("nodomain.freeyourgadget.gadgetbridge.GBMoodResult");
                         intent.setComponent(new ComponentName("nodomain.freeyourgadget.gadgetbridge",
                                 "nodomain.freeyourgadget.gadgetbridge.service.receivers.GBMoodResultReceiver"));
+                        intent.putExtra("mood_x", mood_x);
+                        intent.putExtra("mood_y", mood_y);
                         sendBroadcast(intent);
-                        //finish();
+                        finish();
                     }
                 }
         );

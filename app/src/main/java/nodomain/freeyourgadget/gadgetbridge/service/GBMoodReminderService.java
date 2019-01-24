@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import nodomain.freeyourgadget.gadgetbridge.activities.MoodReminderActivity;
 import nodomain.freeyourgadget.gadgetbridge.service.receivers.GBMoodResultReceiver;
@@ -20,12 +21,12 @@ public class GBMoodReminderService extends Service {
     private LocalBroadcastManager localBroadcastManager;
     private IntentFilter intentFilter;
 
-    private static int HOUR = 3600000;
+    private static int HOUR = 10000;
     private static int START_REMINDER = 1;
-    private static int END_REMINDER = 14;
+    private static int END_REMINDER = 24;
 
-    private float mood_x = 0;
-    private float mood_y = 0;
+    private static float mood_x = 0;
+    private static float mood_y = 0;
 
     public GBMoodReminderService() {
 
@@ -66,13 +67,13 @@ public class GBMoodReminderService extends Service {
         //unregisterReceiver(gbMoodResultReceiver);
     }
 
-    public void setMood(int x, int y) {
+    public static void setMood(float x, float y) {
         mood_x = x;
         mood_y = y;
     }
 
-    public float getMood_x() {return mood_x;}
-    public float getMood_y() {return mood_y;}
+    public static float getMood_x() {return mood_x;}
+    public static float getMood_y() {return mood_y;}
 
     public void startMoodReminder() {
         new Thread(new Runnable() {
@@ -93,9 +94,12 @@ public class GBMoodReminderService extends Service {
                         showMoodReminder.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         getApplication().startActivity(showMoodReminder);
 
-
                         lastTimeMillis = nowTimeMillis;
                     }
+                    //mood_x = gbMoodResultReceiver.mood_x;
+                    //mood_y = gbMoodResultReceiver.mood_y;
+                    //String str = new String("mood_x: " + mood_x + ", mood_y: " + mood_y);
+                    //Log.i("MoodReminderService", str);
                     try {
                         Thread.sleep(2000);
                     } catch (Exception e) {

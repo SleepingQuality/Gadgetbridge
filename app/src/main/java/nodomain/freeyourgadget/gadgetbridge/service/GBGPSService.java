@@ -87,8 +87,14 @@ public class GBGPSService extends Service {
         startForeground(0001,notification);
         */
 
-        startAccelerometer();
-        startGPS();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                startAccelerometer();
+                startGPS();
+            }
+        }).start();
+
         return Service.START_STICKY;
     }
 
