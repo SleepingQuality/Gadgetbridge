@@ -21,9 +21,9 @@ public class GBMoodReminderService extends Service {
     private LocalBroadcastManager localBroadcastManager;
     private IntentFilter intentFilter;
 
-    private static int HOUR = 10000;
+    private static int HOUR = 3600000;
     private static int START_REMINDER = 1;
-    private static int END_REMINDER = 24;
+    private static int END_REMINDER = 14;
 
     private static float mood_x = 0;
     private static float mood_y = 0;
