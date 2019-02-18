@@ -61,6 +61,7 @@ public class GBGPSService extends Service {
 
     private Thread initialThread;
     private Thread gpsThread;
+    private boolean gpsThreadExit = false;
 
     public GBGPSService() {
 
@@ -102,34 +103,25 @@ public class GBGPSService extends Service {
                 .build();
         startForeground(0001,notification);
         */
-        /*
-        if (gpsThread != null) {
-            try {
-                if (mLocationClient != null) {
 
-                    //mLocationClient.stop();
-                }
-                gpsThread.stop();
-                Log.i("GBGPSService", "kill old gpsThread.");
-                gpsThread = null;
-            } catch (Exception e) {
-                Log.e("GBGPSService", e.getMessage());
-            }
-        }
-        if (initialThread != null) {
+        if (gpsThread != null) {
+            gpsThreadExit = true;
             try {
-                initialThread.stop();
-                Log.i("GBGPSService", "kill old initialThread.");
-                initialThread = null;
-            } catch (Exception e) {
-                Log.e("GBGPSService", e.getMessage());
-            }
+                mLocationClient.unRegisterLocationListener(myListener);
+            } catch (Exception e) {}
         }
-        */
+
+        if (initialThread != null) {
+            sm.unregisterListener(listener);
+        }
+
         initialThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 startAccelerometer();
+
+                try {Thread.sleep(6000);} catch (Exception e) {}
+                gpsThreadExit = false;
                 startGPS();
             }
         });
@@ -226,7 +218,8 @@ public class GBGPSService extends Service {
                     public void run() {
                         long lastTimeMillis = System.currentTimeMillis();
                         long nowTimeMillis;
-                        while (true) {
+                        mLocationClient.start();
+                        while (!gpsThreadExit) {
                             nowTimeMillis = System.currentTimeMillis();
                             if (nowTimeMillis/60000 - lastTimeMillis/60000 >= 1) {
                                 if (mLocationClient.isStarted()) {

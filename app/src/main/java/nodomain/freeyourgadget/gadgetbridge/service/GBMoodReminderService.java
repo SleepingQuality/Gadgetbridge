@@ -39,6 +39,7 @@ public class GBMoodReminderService extends Service {
     private Vibrator vibrator;
 
     private Thread thread;
+    private boolean threadExit = false;
 
     public GBMoodReminderService() {
 
@@ -100,30 +101,25 @@ public class GBMoodReminderService extends Service {
     public static float getMood_y() {return mood_y;}
 
     public void startMoodReminder() {
-        /*
         if (thread != null) {
-            try {
-                thread.stop();
-                Log.i("startMoodReminder", "kill old thread.");
-                thread = null;
-            } catch (Exception e) {
-                Log.e("GBGPSService", e.getMessage());
-            }
+            threadExit = true;
+            try {Thread.sleep(3000);} catch (Exception e) {}
         }
-        */
+        threadExit = false;
+
         if (lastTimeMillis == 0) {
             lastTimeMillis = System.currentTimeMillis();
         }
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (true) {
+                while (!threadExit) {
                     nowTimeMillis = System.currentTimeMillis();
                     if (nowTimeMillis/(2*HOUR) - lastTimeMillis/(2*HOUR) >= 1 &&
                             (nowTimeMillis/HOUR)%24 >= START_REMINDER &&
                             (nowTimeMillis/HOUR)%24 <= END_REMINDER) {
                         vibrator=(Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                        //vibrator.vibrate(400);//400ms
+                        vibrator.vibrate(400);//400ms
 
                         Intent showMoodReminder = new Intent(context, MoodReminderActivity.class);
                         showMoodReminder.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
