@@ -2,6 +2,8 @@ package nodomain.freeyourgadget.gadgetbridge.service;
 
 import android.Manifest;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -25,6 +27,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 
+import nodomain.freeyourgadget.gadgetbridge.GBApplication;
 import nodomain.freeyourgadget.gadgetbridge.R;
 import nodomain.freeyourgadget.gadgetbridge.activities.ControlCenterv2;
 
@@ -44,6 +47,7 @@ public class GBGPSService extends Service {
             Manifest.permission.INTERNET
     };
     private static int PERMISSION_CODE = 100;
+    public static String CHANNEL_ID_STRING = "gb100003";
 
     private Sensor sensor;
     private SensorManager sm;
@@ -71,12 +75,21 @@ public class GBGPSService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("GBGPSService", "onCreate executed");
+        Log.i("GBGPSService", "onCreate executed");
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationChannel mChannel = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            mChannel = new NotificationChannel(CHANNEL_ID_STRING, "gadgetbridge", NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(mChannel);
+            Notification notification = new Notification.Builder(getApplicationContext(), CHANNEL_ID_STRING).build();
+            startForeground(100003, notification);
+        }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("GBGPSService", "onStartCommand executed");
+        Log.i("GBGPSService", "onStartCommand executed");
 
         /* //to prevent the service from being killed
         Intent notificationIntent = new Intent();
@@ -89,15 +102,18 @@ public class GBGPSService extends Service {
                 .build();
         startForeground(0001,notification);
         */
+        /*
         if (gpsThread != null) {
             try {
-                if (mLocationClient != null)
-                    mLocationClient.stop();
+                if (mLocationClient != null) {
+
+                    //mLocationClient.stop();
+                }
                 gpsThread.stop();
                 Log.i("GBGPSService", "kill old gpsThread.");
                 gpsThread = null;
             } catch (Exception e) {
-
+                Log.e("GBGPSService", e.getMessage());
             }
         }
         if (initialThread != null) {
@@ -106,9 +122,10 @@ public class GBGPSService extends Service {
                 Log.i("GBGPSService", "kill old initialThread.");
                 initialThread = null;
             } catch (Exception e) {
-
+                Log.e("GBGPSService", e.getMessage());
             }
         }
+        */
         initialThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -124,7 +141,7 @@ public class GBGPSService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("GBGPSService", "onDestroy executed");
+        Log.i("GBGPSService", "onDestroy executed");
         sm.unregisterListener(listener);
 
         if (mLocationClient.isStarted()) {
@@ -132,7 +149,6 @@ public class GBGPSService extends Service {
         }
         mLocationClient.unRegisterLocationListener(myListener);
     }
-
 
     public void startAccelerometer()
     {
@@ -282,4 +298,31 @@ public class GBGPSService extends Service {
         }
     }
 
+    public double getAccele_x() {
+        return accele_x;
+    }
+
+    public double getAccele_y() {
+        return accele_y;
+    }
+
+    public double getAccele_z() {
+        return accele_z;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public double getAltitude() {
+        return altitude;
+    }
+
+    public double getRadius() {
+        return radius;
+    }
 }

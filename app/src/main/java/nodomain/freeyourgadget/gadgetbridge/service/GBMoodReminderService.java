@@ -1,9 +1,13 @@
 package nodomain.freeyourgadget.gadgetbridge.service;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
@@ -16,6 +20,7 @@ import nodomain.freeyourgadget.gadgetbridge.service.receivers.GBMoodResultReceiv
 public class GBMoodReminderService extends Service {
 
     private Context context = this;
+    public static String CHANNEL_ID_STRING = "gb100001";
 
     private GBMoodResultReceiver gbMoodResultReceiver;
     private LocalBroadcastManager localBroadcastManager;
@@ -48,7 +53,17 @@ public class GBMoodReminderService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("GBMoodReminderService", "onCreate executed");
+        Log.i("GBMoodReminderService", "onCreate executed");
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationChannel mChannel = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            mChannel = new NotificationChannel(CHANNEL_ID_STRING, "gadgetbridge", NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(mChannel);
+            Notification notification = new Notification.Builder(getApplicationContext(), CHANNEL_ID_STRING).build();
+            startForeground(100001, notification);
+        }
+
         mood_x = 0; mood_y = 0;
         lastTimeMillis = 0;
         nowTimeMillis = 0;
@@ -63,7 +78,7 @@ public class GBMoodReminderService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("GBMoodReminderService", "onStartCommand executed");
+        Log.i("GBMoodReminderService", "onStartCommand executed");
         startMoodReminder();
         return Service.START_STICKY;
     }
@@ -71,7 +86,7 @@ public class GBMoodReminderService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("GBMoodReminderService", "onDestroy executed");
+        Log.i("GBMoodReminderService", "onDestroy executed");
         localBroadcastManager.unregisterReceiver(gbMoodResultReceiver);
         //unregisterReceiver(gbMoodResultReceiver);
     }
@@ -85,15 +100,17 @@ public class GBMoodReminderService extends Service {
     public static float getMood_y() {return mood_y;}
 
     public void startMoodReminder() {
+        /*
         if (thread != null) {
             try {
                 thread.stop();
                 Log.i("startMoodReminder", "kill old thread.");
                 thread = null;
             } catch (Exception e) {
-
+                Log.e("GBGPSService", e.getMessage());
             }
         }
+        */
         if (lastTimeMillis == 0) {
             lastTimeMillis = System.currentTimeMillis();
         }

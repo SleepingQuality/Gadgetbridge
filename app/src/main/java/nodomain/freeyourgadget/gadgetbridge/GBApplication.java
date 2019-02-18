@@ -65,6 +65,7 @@ import nodomain.freeyourgadget.gadgetbridge.model.ActivityUser;
 import nodomain.freeyourgadget.gadgetbridge.model.DeviceService;
 import nodomain.freeyourgadget.gadgetbridge.service.GBGPSService;
 import nodomain.freeyourgadget.gadgetbridge.service.GBMoodReminderService;
+import nodomain.freeyourgadget.gadgetbridge.service.GBRecordManagementService;
 import nodomain.freeyourgadget.gadgetbridge.service.NotificationCollectorMonitorService;
 import nodomain.freeyourgadget.gadgetbridge.util.AndroidUtils;
 import nodomain.freeyourgadget.gadgetbridge.util.FileUtils;
@@ -197,13 +198,35 @@ public class GBApplication extends Application {
                 bluetoothStateChangeReceiver = new BluetoothStateChangeReceiver();
                 registerReceiver(bluetoothStateChangeReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
             }
-            startService(new Intent(this, NotificationCollectorMonitorService.class));
+
+            /*
+            if (VERSION.SDK_INT < Build.VERSION_CODES.O)
+                startService(new Intent(this, NotificationCollectorMonitorService.class));
+            else startForegroundService(new Intent(this, NotificationCollectorMonitorService.class));
+            */
+            try {
+                startService(new Intent(this, NotificationCollectorMonitorService.class));
+            } catch (Exception e) {}
         }
 
         Intent gbGPSService = new Intent(context, GBGPSService.class);
-        context.startService(gbGPSService);
         Intent gbMoodReminderService = new Intent(context, GBMoodReminderService.class);
+        Intent gbRecordManagementService = new Intent(context, GBRecordManagementService.class);
+
+        if (VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            context.startService(gbGPSService);
+            context.startService(gbMoodReminderService);
+            context.startService(gbRecordManagementService);
+        } else {
+            context.startForegroundService(gbGPSService);
+            context.startForegroundService(gbMoodReminderService);
+            context.startForegroundService(gbRecordManagementService);
+        }
+        /*
+        context.startService(gbGPSService);
         context.startService(gbMoodReminderService);
+        context.startService(gbRecordManagementService);
+        */
     }
 
     @Override
@@ -488,14 +511,14 @@ public class GBApplication extends Application {
         saveAppsPebbleBlackList();
     }
 
-public static String packageNameToPebbleMsgSender(String packageName) {
-    if ("eu.siacs.conversations".equals(packageName)){
-        return("Conversations");
-    } else if ("net.osmand.plus".equals(packageName)) {
-        return("OsmAnd");
+    public static String packageNameToPebbleMsgSender(String packageName) {
+        if ("eu.siacs.conversations".equals(packageName)){
+            return("Conversations");
+        } else if ("net.osmand.plus".equals(packageName)) {
+            return("OsmAnd");
+        }
+        return packageName;
     }
-    return packageName;
-}
 
     private static HashSet<String> calendars_blacklist = null;
 

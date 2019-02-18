@@ -17,11 +17,13 @@
 package nodomain.freeyourgadget.gadgetbridge.service;
 
 import android.app.ActivityManager;
+import android.app.Notification;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.Process;
 

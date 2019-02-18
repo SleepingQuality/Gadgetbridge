@@ -491,6 +491,10 @@
             android:name=".service.GBMoodReminderService"
             android:enabled="true"
             android:exported="true" />
+        <service
+            android:name=".service.GBRecordManagementService"
+            android:enabled="true"
+            android:exported="true" />
 
         <activity
             android:name=".activities.MoodReminderActivity"
